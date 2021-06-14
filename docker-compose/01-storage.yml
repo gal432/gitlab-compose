@@ -1,0 +1,23 @@
+version: "2.3"
+
+services:
+  redis:
+    restart: always
+    image: redis:6.2.4
+    volumes:
+    - redis-data:/var/lib/redis:Z
+
+  db:
+    restart: always
+    image: postgres:13
+    volumes:
+    - 'postgresql-data:/var/lib/postgresql'
+    environment:
+    - POSTGRES_DB=gitlabhq_production
+    - POSTGRES_NAME=${POSTGRES_DB_NAME}
+    - POSTGRES_USER=${POSTGRES_DB_USERNAME}
+    - POSTGRES_PASSWORD=${POSTGRES_DB_PASSWORD}
+
+volumes:
+  redis-data:
+  postgresql-data:
