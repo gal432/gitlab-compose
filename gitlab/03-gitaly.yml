@@ -1,0 +1,49 @@
+version: "2.3"
+
+services:
+  gitaly:
+    restart: always
+    image: ${GITLAB_VERSION}
+    volumes:
+      - './gitlab-secrets.json:/etc/gitlab/gitlab-secrets.json'
+      - '/Users/home/gitlab/data:/var/opt/gitlab'
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url '${GITLAB_URL}'
+
+        # Avoid running unnecessary services
+        alertmanager['enable'] = false
+        gitaly['enable'] = false
+        puma['enable'] = false
+        sidekiq['enable'] = false
+        gitlab_workhorse['enable'] = false
+        patroni['enable'] = false
+        postgresql['enable'] = false
+        consul['enable'] = false
+        prometheus['enable'] = false
+        alertmanager['enable'] = false
+        pgbouncer_exporter['enable'] = false
+        redis['enable'] = false
+        redis_exporter['enable'] = false
+        grafana['enable'] = false
+        gitlab_exporter['enable'] = false
+        nginx['enable'] = false
+
+        # Configure the gitlab-shell API callback URL. Without this, `git push` will
+        # fail. This can be your 'front door' GitLab URL or an internal load
+        # balancer.
+        gitlab_rails['internal_api_url'] = "${GITLAB_URL}"
+
+        # Gitaly
+        gitaly['enable'] = true
+        gitaly['auth_token'] = "${GITALY_AUTH_TOKEN}"
+        gitlab_shell['secret_token'] = "${GITALY_SECRET_TOKEN}"
+        gitaly['listen_addr'] = "0.0.0.0:8075"
+        gitaly['prometheus_listen_addr'] = "0.0.0.0:9236"
+        node_exporter['listen_address'] = "0.0.0.0:9100"
+
+        git_data_dirs({
+          'default' => {
+            'path' => '/var/opt/gitlab/git-data'
+          },
+        })

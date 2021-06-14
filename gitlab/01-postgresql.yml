@@ -1,0 +1,50 @@
+version: "2.3"
+
+services:
+  postgresql:
+    restart: always
+    image: ${GITLAB_VERSION}
+    volumes:
+      - './gitlab-secrets.json:/etc/gitlab/gitlab-secrets.json'
+      - '/Users/home/gitlab/data:/var/opt/gitlab'
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url '${GITLAB_URL}'
+
+        # Avoid running unnecessary services
+        alertmanager['enable'] = false
+        gitaly['enable'] = false
+        puma['enable'] = false
+        sidekiq['enable'] = false
+        gitlab_workhorse['enable'] = false
+        patroni['enable'] = false
+        consul['enable'] = false
+        prometheus['enable'] = false
+        alertmanager['enable'] = false
+        pgbouncer_exporter['enable'] = false
+        redis['enable'] = false
+        redis_exporter['enable'] = false
+        grafana['enable'] = false
+        gitlab_exporter['enable'] = false
+        nginx['enable'] = false
+        repmgrd['enable'] = false
+
+        roles ['postgres_role']
+        # Set the network addresses that the exporters used for monitoring will listen on
+        node_exporter['listen_address'] = "0.0.0.0:9100"
+        postgres_exporter['listen_address'] = "0.0.0.0:9187"
+        postgres_exporter['dbname'] = "${POSTGRES_DB_NAME}"
+        postgres_exporter['password'] = "${POSTGRES_DB_PASSWORD}"
+
+        # Set the PostgreSQL address and port
+        postgresql['enable'] = true
+        postgresql['listen_address'] = "0.0.0.0"
+        postgresql['port'] = 5432
+        postgresql['md5_auth_cidr_addresses'] = ["0.0.0.0/0"]
+        postgresql['trust_auth_cidr_addresses'] = ["0.0.0.0/0"]
+        postgresql['sql_user_password'] = "${POSTGRES_DB_PASSWORD_MD5}"
+        postgresql['sql_user'] = "${POSTGRES_DB_USERNAME}"
+
+
+volumes:
+  postgresql-data:

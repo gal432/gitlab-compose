@@ -1,0 +1,49 @@
+version: "2.3"
+
+services:
+  redis:
+    restart: always
+    image: ${GITLAB_VERSION}
+    volumes:
+      - './gitlab-secrets.json:/etc/gitlab/gitlab-secrets.json'
+      - '/Users/home/gitlab/data:/var/opt/gitlab'
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        external_url '${GITLAB_URL}'
+
+        # Avoid running unnecessary services
+        alertmanager['enable'] = false
+        gitaly['enable'] = false
+        puma['enable'] = false
+        sidekiq['enable'] = false
+        gitlab_workhorse['enable'] = false
+        patroni['enable'] = false
+        postgresql['enable'] = false
+        consul['enable'] = false
+        prometheus['enable'] = false
+        alertmanager['enable'] = false
+        pgbouncer_exporter['enable'] = false
+        redis_exporter['enable'] = false
+        grafana['enable'] = false
+        gitlab_exporter['enable'] = false
+        nginx['enable'] = false
+
+        redis['enable'] = true
+        redis['bind'] = "0.0.0.0"
+        redis['port'] = 6379
+        redis['password'] = "${REDIS_PASSWORD}"
+
+        gitlab_rails['enable'] = false
+
+        # Set the network addresses that the exporters used for monitoring will listen on
+        node_exporter['listen_address'] = "0.0.0.0:9100"
+        redis_exporter['listen_address'] = "0.0.0.0:9121"
+        redis_exporter['flags'] = {
+              'redis.addr' => 'redis://0.0.0.0:6379',
+              'redis.password' => '${REDIS_PASSWORD}',
+        }
+
+
+volumes:
+  redis-data:
+  postgresql-data:
