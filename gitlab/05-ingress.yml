@@ -9,7 +9,7 @@ services:
       - "22:22"
       - "443:443"
     volumes:
-      - "./nginx.conf:/etc/nginx/nginx.conf"
+      - "./config/nginx/nginx.conf:/etc/nginx/nginx.conf"
     links:
       - "gitlab"
     depends_on:

@@ -6,7 +6,7 @@ services:
     image: ${GITLAB_VERSION}
     scale: 2
     volumes:
-      - "./gitlab-secrets.json:/etc/gitlab/gitlab-secrets.json"
+      - "./config/global/gitlab-secrets.json:/etc/gitlab/gitlab-secrets.json"
       - "/Users/home/gitlab/data:/var/opt/gitlab"
     links:
       - "redis"

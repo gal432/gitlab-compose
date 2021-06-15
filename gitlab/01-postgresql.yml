@@ -5,7 +5,7 @@ services:
     restart: always
     image: ${GITLAB_VERSION}
     volumes:
-      - "./gitlab-secrets.json:/etc/gitlab/gitlab-secrets.json"
+      - "./config/global/gitlab-secrets.json:/etc/gitlab/gitlab-secrets.json"
       - "/Users/home/gitlab/data:/var/opt/gitlab"
     environment:
       GITLAB_OMNIBUS_CONFIG: |
