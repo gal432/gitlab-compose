@@ -7,7 +7,14 @@ services:
     scale: 2
     volumes:
       - "./config/global/gitlab-secrets.json:/etc/gitlab/gitlab-secrets.json"
-      # we dont' want to mount the entire /var/opt/gitlab since the socket files are managed there as well
+      - "./config/global/ssh_host_ecdsa_key:/etc/gitlab/ssh_host_ecdsa_key"
+      - "./config/global/ssh_host_ecdsa_key.pub:/etc/gitlab/ssh_host_ecdsa_key.pub"
+      - "./config/global/ssh_host_ed25519_key:/etc/gitlab/ssh_host_ed25519_key"
+      - "./config/global/ssh_host_ed25519_key.pub:/etc/gitlab/ssh_host_ed25519_key.pub"
+      - "./config/global/ssh_host_rsa_key:/etc/gitlab/ssh_host_rsa_key"
+      - "./config/global/ssh_host_rsa_key.pub:/etc/gitlab/ssh_host_rsa_key.pub"
+
+      # we don't want to mount the entire /var/opt/gitlab since the socket files are managed there as well
       - "/Users/home/gitlab/data/git-data:/var/opt/gitlab/git-data"
       - "/Users/home/gitlab/data/gitlab-ci:/var/opt/gitlab/gitlab-ci"
     links:

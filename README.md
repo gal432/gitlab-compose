@@ -19,8 +19,14 @@ To add more workers we have a few components that need to be edited:
 * Once all configured, run `start.sh` again and the components will get updated
 
 
-### Open Issues
-* SSH multi hosts - need to figure how do we want to manage the host keys
-  shared to be the same for avoiding `WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!`
+## Open Issues
 * HTTPS certificate
 * Backups
+
+
+## Migration
+The migration from omnibus config to this running setup should include several changes:
+* Change the mounts according to your correct omnibus setup
+  (see the `volumes` for more details per service in the compose files).
+* Copy `config.template.env` and populate the values acording to the right setup.
+* Copy `gitlab-secrets.json` and the host SSH keys from the gitlab config directory.
