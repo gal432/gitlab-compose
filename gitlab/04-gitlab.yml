@@ -4,13 +4,10 @@ services:
   gitlab:
     restart: always
     image: ${GITLAB_VERSION}
-    ports:
-      - '80:80'
-      - '22:22'
-      - '443:443'
+    scale: 2
     volumes:
-      - './gitlab-secrets.json:/etc/gitlab/gitlab-secrets.json'
-      - '/Users/home/gitlab/data:/var/opt/gitlab'
+      - "./gitlab-secrets.json:/etc/gitlab/gitlab-secrets.json"
+      - "/Users/home/gitlab/data:/var/opt/gitlab"
     links:
       - "redis"
       - "postgresql"

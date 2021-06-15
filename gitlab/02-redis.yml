@@ -5,8 +5,8 @@ services:
     restart: always
     image: ${GITLAB_VERSION}
     volumes:
-      - './gitlab-secrets.json:/etc/gitlab/gitlab-secrets.json'
-      - '/Users/home/gitlab/data:/var/opt/gitlab'
+      - "./gitlab-secrets.json:/etc/gitlab/gitlab-secrets.json"
+      - "/Users/home/gitlab/data:/var/opt/gitlab"
     environment:
       GITLAB_OMNIBUS_CONFIG: |
         external_url '${GITLAB_URL}'
@@ -42,8 +42,3 @@ services:
               'redis.addr' => 'redis://0.0.0.0:6379',
               'redis.password' => '${REDIS_PASSWORD}',
         }
-
-
-volumes:
-  redis-data:
-  postgresql-data:

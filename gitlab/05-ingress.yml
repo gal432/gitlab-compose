@@ -1,0 +1,19 @@
+version: "2.3"
+
+services:
+  ingress:
+    restart: always
+    image: nginx:1.21.0
+    ports:
+      - "80:80"
+      - "22:22"
+      - "443:443"
+    volumes:
+      - "./nginx.conf:/etc/nginx/nginx.conf"
+    links:
+      - "gitlab"
+    depends_on:
+      - "gitlab"
+    external_links:
+      - "gitlab_gitlab_1:gitlab1"
+      - "gitlab_gitlab_2:gitlab2"

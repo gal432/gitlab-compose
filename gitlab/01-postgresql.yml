@@ -5,8 +5,8 @@ services:
     restart: always
     image: ${GITLAB_VERSION}
     volumes:
-      - './gitlab-secrets.json:/etc/gitlab/gitlab-secrets.json'
-      - '/Users/home/gitlab/data:/var/opt/gitlab'
+      - "./gitlab-secrets.json:/etc/gitlab/gitlab-secrets.json"
+      - "/Users/home/gitlab/data:/var/opt/gitlab"
     environment:
       GITLAB_OMNIBUS_CONFIG: |
         external_url '${GITLAB_URL}'
@@ -44,7 +44,3 @@ services:
         postgresql['trust_auth_cidr_addresses'] = ["0.0.0.0/0"]
         postgresql['sql_user_password'] = "${POSTGRES_DB_PASSWORD_MD5}"
         postgresql['sql_user'] = "${POSTGRES_DB_USERNAME}"
-
-
-volumes:
-  postgresql-data:
