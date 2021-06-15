@@ -29,6 +29,7 @@ services:
         nginx['enable'] = false
         repmgrd['enable'] = false
 
+        # Service configs
         roles ['postgres_role']
         # Set the network addresses that the exporters used for monitoring will listen on
         node_exporter['listen_address'] = "0.0.0.0:9100"

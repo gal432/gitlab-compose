@@ -1,46 +1,46 @@
 version: "2.3"
 
 services:
-  gitlab:
+  sidekiq:
     restart: always
     image: ${GITLAB_VERSION}
-    scale: 2
-    volumes:
-      - "./config/global/gitlab-secrets.json:/etc/gitlab/gitlab-secrets.json"
-      # we dont' want to mount the entire /var/opt/gitlab since the socket files are managed there as well
-      - "/Users/home/gitlab/data/git-data:/var/opt/gitlab/git-data"
-      - "/Users/home/gitlab/data/gitlab-ci:/var/opt/gitlab/gitlab-ci"
     links:
       - "redis"
       - "postgresql"
-      - "gitaly"
     depends_on:
       - "redis"
       - "postgresql"
-      - "gitaly"
+    volumes:
+      - "./config/global/gitlab-secrets.json:/etc/gitlab/gitlab-secrets.json"
+      - "/Users/home/gitlab/data:/var/opt/gitlab"
     environment:
       GITLAB_OMNIBUS_CONFIG: |
         external_url '${GITLAB_URL}'
 
         # Avoid running unnecessary services
+        alertmanager['enable'] = false
         gitaly['enable'] = false
+        puma['enable'] = false
+        gitlab_workhorse['enable'] = false
+        patroni['enable'] = false
         postgresql['enable'] = false
+        consul['enable'] = false
         prometheus['enable'] = false
         alertmanager['enable'] = false
+        pgbouncer_exporter['enable'] = false
+        redis['enable'] = false
+        redis_exporter['enable'] = false
         grafana['enable'] = false
         gitlab_exporter['enable'] = false
-        sidekiq['enable'] = false
+        nginx['enable'] = false
 
         # Service configs
-        roles ['application_role']
-        nginx['enable'] = true
+        sidekiq['enable'] = true
+        sidekiq['listen_address'] = "0.0.0.0"
+        sidekiq['max_concurrency'] = 10
 
-        # Set the network addresses that the exporters used for monitoring will listen on
-        node_exporter['listen_address'] = "0.0.0.0:9100"
-        gitlab_workhorse['prometheus_listen_addr'] = "0.0.0.0:9229"
-        puma['listen'] = "0.0.0.0"
+        gitlab_rails['auto_migrate'] = true
 
-        gitlab_rails['auto_migrate'] = false
         ## PostgreSQL connection details
         gitlab_rails['db_adapter'] = "postgresql"
         gitlab_rails['db_encoding'] = "unicode"

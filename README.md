@@ -6,7 +6,7 @@ I followed the guides to make the service to be compatible with 2K users.
 More details can be found here https://docs.gitlab.com/ee/administration/reference_architectures/2k_users.html
 
 
-## Add more workers
+## Add More Workers
 To add more workers we have a few components that need to be edited:
 * Increase the `scale` field in `gitlab` service.
 * For each scaled container, `docker-compose` adds `_(int)` extension to container name.
@@ -17,3 +17,10 @@ To add more workers we have a few components that need to be edited:
     * `load_balancer_https`
     * `load_balancer_ssh`
 * Once all configured, run `start.sh` again and the components will get updated
+
+
+### Open Issues
+* SSH multi hosts - need to figure how do we want to manage the host keys
+  shared to be the same for avoiding `WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!`
+* HTTPS certificate
+* Backups

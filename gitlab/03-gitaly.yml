@@ -4,6 +4,10 @@ services:
   gitaly:
     restart: always
     image: ${GITLAB_VERSION}
+    links:
+      - "redis"
+    depends_on:
+      - "redis"
     volumes:
       - "./config/global/gitlab-secrets.json:/etc/gitlab/gitlab-secrets.json"
       - "/Users/home/gitlab/data:/var/opt/gitlab"
@@ -29,12 +33,7 @@ services:
         gitlab_exporter['enable'] = false
         nginx['enable'] = false
 
-        # Configure the gitlab-shell API callback URL. Without this, `git push` will
-        # fail. This can be your 'front door' GitLab URL or an internal load
-        # balancer.
-        gitlab_rails['internal_api_url'] = "${GITLAB_URL}"
-
-        # Gitaly
+        # Service configs
         gitaly['enable'] = true
         gitaly['auth_token'] = "${GITALY_AUTH_TOKEN}"
         gitlab_shell['secret_token'] = "${GITALY_SECRET_TOKEN}"
@@ -47,3 +46,11 @@ services:
             'path' => '/var/opt/gitlab/git-data'
           },
         })
+
+        # Configure the gitlab-shell API callback URL. Without this, `git push` will
+        # fail. This can be your 'front door' GitLab URL or an internal load
+        # balancer.
+        gitlab_rails['internal_api_url'] = "${GITLAB_URL}"
+        gitlab_rails['redis_host'] = "redis"
+        gitlab_rails['redis_port'] = 6379
+        gitlab_rails['redis_password'] = "${REDIS_PASSWORD}"
