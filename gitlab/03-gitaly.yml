@@ -8,9 +8,11 @@ services:
       - "redis"
     depends_on:
       - "redis"
+      - "postgresql"
     volumes:
       - "./config/global/gitlab-secrets.json:/etc/gitlab/gitlab-secrets.json"
-      - "${GITLAB_DATA_FOLDER}:/var/opt/gitlab"
+      - "${GITLAB_DATA_FOLDER}/git-data:/var/opt/gitlab/git-data"
+      - "${GITLAB_DATA_FOLDER}/gitlab-ci:/var/opt/gitlab/gitlab-ci"
     environment:
       GITLAB_OMNIBUS_CONFIG: |
         external_url '${GITLAB_URL}'
@@ -55,3 +57,10 @@ services:
         gitlab_rails['redis_host'] = "redis"
         gitlab_rails['redis_port'] = 6379
         gitlab_rails['redis_password'] = "${REDIS_PASSWORD}"
+
+        ## PostgreSQL connection details
+        gitlab_rails['db_adapter'] = "postgresql"
+        gitlab_rails['db_encoding'] = "unicode"
+        gitlab_rails['db_host'] = "postgresql"
+        gitlab_rails['db_username'] = "${POSTGRES_DB_USERNAME}"
+        gitlab_rails['db_password'] = "${POSTGRES_DB_PASSWORD}"

@@ -12,7 +12,8 @@ services:
       - "postgresql"
     volumes:
       - "./config/global/gitlab-secrets.json:/etc/gitlab/gitlab-secrets.json"
-      - "${GITLAB_DATA_FOLDER}:/var/opt/gitlab"
+      - "${GITLAB_DATA_FOLDER}/git-data:/var/opt/gitlab/git-data"
+      - "${GITLAB_DATA_FOLDER}/gitlab-ci:/var/opt/gitlab/gitlab-ci"
     environment:
       GITLAB_OMNIBUS_CONFIG: |
         external_url '${GITLAB_URL}'

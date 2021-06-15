@@ -6,7 +6,7 @@ services:
     image: ${GITLAB_VERSION}
     volumes:
       - "./config/global/gitlab-secrets.json:/etc/gitlab/gitlab-secrets.json"
-      - "${GITLAB_DATA_FOLDER}:/var/opt/gitlab"
+      - "${GITLAB_DATA_FOLDER}/postgresql:/var/opt/gitlab/postgresql"
     environment:
       GITLAB_OMNIBUS_CONFIG: |
         external_url '${GITLAB_URL}'

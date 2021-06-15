@@ -6,7 +6,7 @@ services:
     image: ${GITLAB_VERSION}
     volumes:
       - "./config/global/gitlab-secrets.json:/etc/gitlab/gitlab-secrets.json"
-      - "${GITLAB_DATA_FOLDER}:/var/opt/gitlab"
+      - "${GITLAB_DATA_FOLDER}/redis:/var/opt/gitlab/redis"
     environment:
       GITLAB_OMNIBUS_CONFIG: |
         external_url '${GITLAB_URL}'

@@ -15,8 +15,8 @@ services:
       - "./config/global/ssh_host_rsa_key.pub:/etc/gitlab/ssh_host_rsa_key.pub"
 
       # we don't want to mount the entire /var/opt/gitlab since the socket files are managed there as well
-      - "/Users/home/gitlab/data/git-data:/var/opt/gitlab/git-data"
-      - "/Users/home/gitlab/data/gitlab-ci:/var/opt/gitlab/gitlab-ci"
+      - "${GITLAB_DATA_FOLDER}/git-data:/var/opt/gitlab/git-data"
+      - "${GITLAB_DATA_FOLDER}/gitlab-ci:/var/opt/gitlab/gitlab-ci"
     links:
       - "redis"
       - "postgresql"
