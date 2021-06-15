@@ -6,13 +6,19 @@ COMPOSE_FILES_FOLDER="${DIR}/gitlab"
 COMPOSE_FILES_AS_PARAMS="01-postgresql.yml -f 02-redis.yml -f 03-gitaly.yml -f 04-gitlab.yml -f 05-ingress.yml -f 06-sidekiq.yml"
 
 GLOBAL_CONFIG_FOLDER_REL="config/global"
-ENV_FILE="${GLOBAL_CONFIG_FOLDER_REL}/config.env"
-ENV_FILE_FULL_PATH="${COMPOSE_FILES_FOLDER}/${ENV_FILE}"
 GLOBAL_CONFIG_FOLDER_ABS="${COMPOSE_FILES_FOLDER}/${GLOBAL_CONFIG_FOLDER_REL}"
+ENV_FILE=config.env
+ENV_FILE_FULL_PATH="${GLOBAL_CONFIG_FOLDER_ABS}/${ENV_FILE}"
+GITLAB_SECRETS_FULL_PATH="${GLOBAL_CONFIG_FOLDER_ABS}/gitlab-secrets.json"
 
 if [[ ! -f ${ENV_FILE_FULL_PATH} ]]; then
-	echo "Copy from template..."
-	cp ${COMPOSE_FILES_FOLDER}/config/global/config.template.env ${ENV_FILE_FULL_PATH}
+	echo "Copy config.template.env"
+	cp ${COMPOSE_FILES_FOLDER}/${GLOBAL_CONFIG_FOLDER_REL}/config.template.env ${ENV_FILE_FULL_PATH}
+fi
+
+if [[ ! -f ${GITLAB_SECRETS_FULL_PATH} ]]; then
+	echo "Copy gitlab-secrets.template.json"
+	cp ${COMPOSE_FILES_FOLDER}/${GLOBAL_CONFIG_FOLDER_REL}/gitlab-secrets.template.json ${GITLAB_SECRETS_FULL_PATH}
 fi
 
 # Generate ssh host key for the first time
@@ -37,4 +43,7 @@ if [[ ! -f ${GITLAB_SSH_HOST_ED25519_KEY} ]]; then
 	chmod 0600 ${GITLAB_SSH_HOST_ED25519_KEY}
 fi
 
-(cd ${COMPOSE_FILES_FOLDER} && echo $(pwd) && docker-compose --env-file ${ENV_FILE} -f ${COMPOSE_FILES_AS_PARAMS} up -d) || echo "Failed to run compose"
+source ${ENV_FILE_FULL_PATH}
+mkdir -p ${GITLAB_DATA_FOLDER}
+
+(cd ${COMPOSE_FILES_FOLDER} && echo $(pwd) && docker-compose --env-file ${GLOBAL_CONFIG_FOLDER_REL}/${ENV_FILE} -f ${COMPOSE_FILES_AS_PARAMS} up -d) || echo "Failed to run compose"

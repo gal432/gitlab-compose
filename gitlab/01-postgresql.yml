@@ -6,7 +6,7 @@ services:
     image: ${GITLAB_VERSION}
     volumes:
       - "./config/global/gitlab-secrets.json:/etc/gitlab/gitlab-secrets.json"
-      - "/Users/home/gitlab/data:/var/opt/gitlab"
+      - "${GITLAB_DATA_FOLDER}:/var/opt/gitlab"
     environment:
       GITLAB_OMNIBUS_CONFIG: |
         external_url '${GITLAB_URL}'
@@ -27,6 +27,7 @@ services:
         grafana['enable'] = false
         gitlab_exporter['enable'] = false
         nginx['enable'] = false
+        repmgr['enable'] = false
         repmgrd['enable'] = false
 
         # Service configs
@@ -36,6 +37,9 @@ services:
         postgres_exporter['listen_address'] = "0.0.0.0:9187"
         postgres_exporter['dbname'] = "${POSTGRES_DB_NAME}"
         postgres_exporter['password'] = "${POSTGRES_DB_PASSWORD}"
+
+        # run the migrations
+        gitlab_rails['auto_migrate'] = true
 
         # Set the PostgreSQL address and port
         postgresql['enable'] = true

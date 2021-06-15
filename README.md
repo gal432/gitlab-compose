@@ -27,6 +27,12 @@ To add more workers we have a few components that need to be edited:
 ## Migration
 The migration from omnibus config to this running setup should include several changes:
 * Change the mounts according to your correct omnibus setup
-  (see the `volumes` for more details per service in the compose files).
+  (see `GITLAB_DATA_FOLDER` in config.dev for more details per service in the compose files).
 * Copy `config.template.env` and populate the values acording to the right setup.
 * Copy `gitlab-secrets.json` and the host SSH keys from the gitlab config directory.
+
+
+## First time sample run
+* You should consider if you even want to use those compose files and not just
+  run the omnibus setup
+* If you still consist, the setup should go up out of the box, but it takes time, so be patient.

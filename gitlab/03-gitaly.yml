@@ -10,7 +10,7 @@ services:
       - "redis"
     volumes:
       - "./config/global/gitlab-secrets.json:/etc/gitlab/gitlab-secrets.json"
-      - "/Users/home/gitlab/data:/var/opt/gitlab"
+      - "${GITLAB_DATA_FOLDER}:/var/opt/gitlab"
     environment:
       GITLAB_OMNIBUS_CONFIG: |
         external_url '${GITLAB_URL}'
@@ -46,6 +46,7 @@ services:
             'path' => '/var/opt/gitlab/git-data'
           },
         })
+
 
         # Configure the gitlab-shell API callback URL. Without this, `git push` will
         # fail. This can be your 'front door' GitLab URL or an internal load

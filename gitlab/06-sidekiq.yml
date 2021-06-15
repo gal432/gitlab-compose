@@ -12,7 +12,7 @@ services:
       - "postgresql"
     volumes:
       - "./config/global/gitlab-secrets.json:/etc/gitlab/gitlab-secrets.json"
-      - "/Users/home/gitlab/data:/var/opt/gitlab"
+      - "${GITLAB_DATA_FOLDER}:/var/opt/gitlab"
     environment:
       GITLAB_OMNIBUS_CONFIG: |
         external_url '${GITLAB_URL}'
@@ -39,7 +39,7 @@ services:
         sidekiq['listen_address'] = "0.0.0.0"
         sidekiq['max_concurrency'] = 10
 
-        gitlab_rails['auto_migrate'] = true
+        gitlab_rails['auto_migrate'] = false
 
         ## PostgreSQL connection details
         gitlab_rails['db_adapter'] = "postgresql"
